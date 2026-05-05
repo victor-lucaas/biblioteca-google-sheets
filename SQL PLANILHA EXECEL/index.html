@@ -1,0 +1,1968 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Biblioteca de Informacoes</title>
+  <style>
+    :root {
+      --bg: #f3f8fb;
+      --panel: #ffffff;
+      --soft: #eef4ff;
+      --text: #172033;
+      --muted: #667085;
+      --line: #d9e1ef;
+      --blue: #2563eb;
+      --blue-dark: #1749b5;
+      --cyan: #0ea5e9;
+      --green: #0f9f6e;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --red: #d63b3b;
+      --shadow: 0 20px 46px rgba(27, 39, 67, 0.13);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 12% 16%, rgba(37, 99, 235, 0.18), transparent 28%),
+        radial-gradient(circle at 86% 20%, rgba(244, 63, 94, 0.14), transparent 24%),
+        radial-gradient(circle at 78% 84%, rgba(15, 159, 110, 0.18), transparent 32%),
+        linear-gradient(135deg, rgba(37, 99, 235, 0.08), transparent 36%),
+        var(--bg);
+      color: var(--text);
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .screen {
+      min-height: 100vh;
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 42px;
+    }
+
+    .auth-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 420px;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .hero,
+    .auth-card,
+    .sidebar,
+    .content,
+    .modal-card {
+      border: 1px solid rgba(217, 225, 239, 0.9);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero {
+      padding: 26px;
+      min-height: 650px;
+      display: grid;
+      align-content: space-between;
+      gap: 26px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .logo {
+      display: grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      background: #172033;
+      color: #fff;
+      font-weight: 900;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 14px 28px rgba(23, 32, 51, 0.24);
+    }
+
+    .logo::after {
+      content: "";
+      position: absolute;
+      right: -14px;
+      bottom: -18px;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--cyan);
+      opacity: 0.75;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 8px;
+      font-size: clamp(1.75rem, 4vw, 3rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 8px;
+      font-size: clamp(1.25rem, 2.4vw, 1.85rem);
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 7px;
+      font-size: 1.05rem;
+      letter-spacing: 0;
+    }
+
+    .muted {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .tutorial-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .step,
+    .item,
+    .library-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: linear-gradient(180deg, #fff, #fbfdff);
+      padding: 14px;
+    }
+
+    .step-number {
+      display: inline-grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      margin-bottom: 12px;
+      border-radius: 50%;
+      background: #eaf1ff;
+      color: #1749b5;
+      font-weight: 900;
+    }
+
+    .auth-card {
+      padding: 22px;
+      align-self: start;
+      position: sticky;
+      top: 18px;
+    }
+
+    .segmented {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 5px;
+      border-radius: 8px;
+      background: #eef2f8;
+      margin-bottom: 16px;
+    }
+
+    .segment {
+      min-height: 38px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .segment.active {
+      background: #fff;
+      color: var(--blue);
+      box-shadow: 0 6px 14px rgba(24, 32, 51, 0.08);
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 13px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field label {
+      font-weight: 800;
+      font-size: 0.9rem;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+      padding: 12px 13px;
+      transition: 0.18s ease;
+    }
+
+    .field textarea {
+      min-height: 170px;
+      resize: vertical;
+      line-height: 1.55;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: rgba(37, 99, 235, 0.68);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 10px 15px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 800;
+      transition: 0.18s ease;
+      text-decoration: none;
+    }
+
+    .button.primary {
+      background: var(--blue);
+      color: #fff;
+      box-shadow: 0 14px 26px rgba(37, 99, 235, 0.25);
+    }
+
+    .button.primary:hover {
+      background: #1d54cc;
+    }
+
+    .button.secondary {
+      background: #fff;
+      border-color: var(--line);
+      color: var(--text);
+    }
+
+    .button.secondary:hover {
+      background: #f6f9ff;
+    }
+
+    .button.danger {
+      background: #fff;
+      border-color: #f0b9b9;
+      color: #b42323;
+    }
+
+    .button.full {
+      width: 100%;
+    }
+
+    .app-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 22px;
+      padding: 18px 20px;
+      border-radius: 8px;
+      background:
+        linear-gradient(120deg, rgba(255, 255, 255, 0.94), rgba(239, 247, 255, 0.88)),
+        linear-gradient(90deg, rgba(37, 99, 235, 0.16), rgba(14, 165, 233, 0.12));
+      border: 1px solid rgba(217, 225, 239, 0.92);
+      box-shadow: 0 14px 34px rgba(27, 39, 67, 0.09);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .sidebar {
+      padding: 16px;
+      position: sticky;
+      top: 18px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 251, 255, 0.92)),
+        linear-gradient(135deg, rgba(14, 165, 233, 0.08), transparent);
+    }
+
+    .nav-title {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .tab-list,
+    .library-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .tab-button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      min-height: 54px;
+      padding: 12px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--text);
+      text-align: left;
+      cursor: pointer;
+      transition: 0.18s ease;
+    }
+
+    .tab-button:hover,
+    .tab-button.active {
+      border-color: rgba(37, 99, 235, 0.28);
+      background: linear-gradient(135deg, #eaf1ff, #f4fbff);
+      color: #1749b5;
+      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.1);
+    }
+
+    .tab-icon {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: #fff;
+      border: 1px solid var(--line);
+      font-weight: 900;
+    }
+
+    .tab-button:nth-child(1) .tab-icon {
+      color: var(--blue);
+      background: #eaf1ff;
+    }
+
+    .tab-button:nth-child(2) .tab-icon {
+      color: var(--green);
+      background: #edf8f2;
+    }
+
+    .tab-button:nth-child(3) .tab-icon {
+      color: var(--amber);
+      background: #fff7e8;
+    }
+
+    .content {
+      min-height: 640px;
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .content::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 6px;
+      background: linear-gradient(90deg, var(--blue), var(--cyan), var(--green), var(--amber), var(--rose));
+    }
+
+    .content > * {
+      position: relative;
+    }
+
+    .panel {
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(217, 225, 239, 0.72);
+    }
+
+    .form-surface {
+      padding: 18px;
+      border: 1px solid #d8e4f4;
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(250, 252, 255, 0.96));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+
+    .panel-header h2 {
+      display: inline-block;
+      color: transparent;
+      background: linear-gradient(90deg, var(--text), var(--blue-dark), var(--cyan));
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 14px;
+    }
+
+    .category-tools {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+    }
+
+    .category-selected {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-height: 48px;
+      padding: 10px 12px;
+      border: 1px solid #cbd7ea;
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, #ffffff, #f7fbff);
+      box-shadow: inset 0 1px 0 rgba(15, 23, 42, 0.03);
+    }
+
+    .category-selected-label {
+      display: grid;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .category-selected-label span {
+      color: var(--muted);
+      font-size: 0.74rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .category-selected-label strong {
+      overflow-wrap: anywhere;
+      color: var(--blue-dark);
+      font-size: 1rem;
+    }
+
+    .category-picker {
+      display: grid;
+      gap: 10px;
+    }
+
+    .category-manager {
+      border: 1px solid #d5e2f4;
+      border-radius: 8px;
+      background: linear-gradient(180deg, #f8fbff, #fff);
+      padding: 12px;
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.05);
+    }
+
+    .category-manager-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .category-manager-title {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .category-list {
+      display: grid;
+      gap: 8px;
+      max-height: 180px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .category-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      min-height: 40px;
+      padding: 8px 10px;
+      border: 1px solid #e1e9f5;
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .category-name {
+      overflow-wrap: anywhere;
+      font-weight: 800;
+    }
+
+    .category-row.active {
+      border-color: rgba(37, 99, 235, 0.48);
+      background: #f3f7ff;
+    }
+
+    .category-row-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .category-mini-button {
+      min-height: 30px;
+      padding: 5px 8px;
+      border: 1px solid #cbd7ea;
+      border-radius: 8px;
+      background: #fff;
+      color: var(--blue-dark);
+      font-size: 0.78rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .category-mini-button.remove {
+      border-color: #f0b9b9;
+      color: #b42323;
+    }
+
+    .new-category-box {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 10px;
+      align-items: end;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, #f8fbff, #fff),
+        linear-gradient(90deg, rgba(14, 165, 233, 0.08), rgba(15, 159, 110, 0.08));
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .searchbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 190px auto;
+      gap: 10px;
+      margin-bottom: 16px;
+      align-items: end;
+    }
+
+    .empty,
+    .notice {
+      border: 1px dashed #b9c5d8;
+      border-radius: 8px;
+      padding: 18px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.62);
+      line-height: 1.55;
+    }
+
+    .notice {
+      border-style: solid;
+      background: #fff8e7;
+      border-color: #f2d48a;
+      color: #725214;
+    }
+
+    .results {
+      display: grid;
+      gap: 12px;
+    }
+
+    .item-head,
+    .library-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .item-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 0 0 auto;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .badge {
+      flex: 0 0 auto;
+      border-radius: 999px;
+      padding: 5px 9px;
+      background: #edf6f1;
+      color: #0c704f;
+      font-size: 0.78rem;
+      font-weight: 900;
+    }
+
+    .icon-button {
+      min-height: 30px;
+      padding: 6px 9px;
+      border-radius: 8px;
+      border: 1px solid #f0b9b9;
+      background: #fff;
+      color: #b42323;
+      font-size: 0.78rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .icon-button:hover {
+      background: #fff3f3;
+    }
+
+    .item-meta,
+    .small {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .item-text {
+      margin: 10px 0 0;
+      white-space: pre-wrap;
+      line-height: 1.55;
+      color: #2c3548;
+      overflow-wrap: anywhere;
+    }
+
+    .library-card.active {
+      border-color: rgba(37, 99, 235, 0.5);
+      background: #f5f8ff;
+    }
+
+    .item,
+    .library-card {
+      box-shadow: 0 10px 24px rgba(27, 39, 67, 0.06);
+    }
+
+    .library-url {
+      overflow-wrap: anywhere;
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin: 8px 0 0;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      background: rgba(20, 28, 43, 0.42);
+      z-index: 50;
+    }
+
+    .modal-card {
+      width: min(620px, 100%);
+      padding: 22px;
+    }
+
+    .confirm-card {
+      width: min(460px, 100%);
+      padding: 22px;
+    }
+
+    .confirm-icon {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      margin-bottom: 14px;
+      border-radius: 50%;
+      background: #fff3f3;
+      color: #b42323;
+      font-weight: 900;
+      font-size: 1.2rem;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      max-width: min(430px, calc(100% - 36px));
+      padding: 13px 15px;
+      border-radius: 8px;
+      background: #172033;
+      color: #fff;
+      box-shadow: 0 18px 38px rgba(24, 32, 51, 0.28);
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: 0.2s ease;
+      line-height: 1.45;
+      z-index: 60;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Professional polish layer */
+    .screen {
+      padding-top: 22px;
+    }
+
+    .app-topbar {
+      background:
+        linear-gradient(120deg, rgba(10, 18, 38, 0.94), rgba(28, 58, 138, 0.92)),
+        linear-gradient(90deg, rgba(14, 165, 233, 0.22), rgba(15, 159, 110, 0.16));
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 22px 48px rgba(15, 23, 42, 0.2);
+    }
+
+    .app-topbar .muted {
+      color: rgba(232, 240, 255, 0.78);
+    }
+
+    .app-topbar h1 {
+      color: #fff;
+      text-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .app-topbar .logo {
+      background: linear-gradient(135deg, #2563eb, #0ea5e9);
+      border: 1px solid rgba(255, 255, 255, 0.26);
+      box-shadow: 0 16px 32px rgba(14, 165, 233, 0.26);
+    }
+
+    .top-actions .button.secondary {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.28);
+      color: #fff;
+      backdrop-filter: blur(10px);
+    }
+
+    .top-actions .button.secondary:hover {
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .workspace {
+      grid-template-columns: 330px minmax(0, 1fr);
+      gap: 20px;
+    }
+
+    .sidebar {
+      background:
+        linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.96)),
+        linear-gradient(135deg, rgba(14, 165, 233, 0.16), transparent);
+      border-color: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      box-shadow: 0 24px 48px rgba(15, 23, 42, 0.22);
+    }
+
+    .sidebar .nav-title {
+      color: rgba(226, 232, 240, 0.72);
+    }
+
+    .sidebar label,
+    .sidebar strong {
+      color: #fff;
+    }
+
+    .sidebar .small,
+    .sidebar .library-url {
+      color: rgba(226, 232, 240, 0.68);
+    }
+
+    .sidebar select {
+      border-color: rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+
+    .sidebar select option {
+      color: #172033;
+    }
+
+    .tab-button {
+      color: rgba(226, 232, 240, 0.9);
+      border-color: transparent;
+    }
+
+    .tab-button:hover,
+    .tab-button.active {
+      background:
+        linear-gradient(135deg, rgba(37, 99, 235, 0.28), rgba(14, 165, 233, 0.16)),
+        rgba(255, 255, 255, 0.08);
+      border-color: rgba(147, 197, 253, 0.34);
+      color: #fff;
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.16);
+    }
+
+    .tab-icon {
+      border-color: rgba(255, 255, 255, 0.16);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+
+    .content {
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 251, 255, 0.96));
+      border-color: rgba(203, 213, 225, 0.9);
+      box-shadow: 0 28px 60px rgba(15, 23, 42, 0.14);
+    }
+
+    .content::after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      top: 80px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(14, 165, 233, 0.12), transparent 62%);
+      pointer-events: none;
+    }
+
+    .content::before {
+      height: 8px;
+      background: linear-gradient(90deg, #2563eb 0%, #0ea5e9 34%, #10b981 68%, #f59e0b 100%);
+    }
+
+    .panel-header {
+      margin: -2px -2px 22px;
+      padding: 4px 2px 18px;
+    }
+
+    .panel-header h2 {
+      font-size: clamp(1.55rem, 2.5vw, 2.15rem);
+    }
+
+    .panel-header .muted {
+      max-width: 620px;
+    }
+
+    .field label {
+      color: #172033;
+      letter-spacing: 0.01em;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      min-height: 48px;
+      border-color: #cbd7ea;
+      background: #fff;
+      box-shadow: inset 0 1px 0 rgba(15, 23, 42, 0.03);
+    }
+
+    .field textarea {
+      min-height: 210px;
+    }
+
+    #title {
+      font-weight: 700;
+    }
+
+    #content {
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+
+    .field input:hover,
+    .field textarea:hover,
+    .field select:hover {
+      border-color: #aabbe0;
+    }
+
+    .button.primary {
+      min-height: 48px;
+      background: linear-gradient(135deg, #2563eb, #0ea5e9);
+      box-shadow: 0 16px 30px rgba(37, 99, 235, 0.28);
+    }
+
+    .button.primary:hover {
+      background: linear-gradient(135deg, #1d4ed8, #0284c7);
+      transform: translateY(-1px);
+    }
+
+    .button.secondary {
+      min-height: 48px;
+      background: #fff;
+      border-color: #cbd7ea;
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.05);
+    }
+
+    .button.secondary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 22px rgba(15, 23, 42, 0.08);
+    }
+
+    .category-tools {
+      grid-template-columns: minmax(0, 1fr) 82px;
+    }
+
+    .new-category-box {
+      border-color: #bfd2f3;
+      background:
+        linear-gradient(135deg, rgba(239, 246, 255, 0.98), rgba(255, 255, 255, 0.98)),
+        linear-gradient(90deg, rgba(14, 165, 233, 0.12), rgba(16, 185, 129, 0.1));
+      box-shadow: 0 12px 28px rgba(37, 99, 235, 0.08);
+    }
+
+    .item {
+      border-color: #d4e0f2;
+      background:
+        linear-gradient(180deg, #fff, #fbfdff);
+      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.07);
+    }
+
+    .item:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 34px rgba(15, 23, 42, 0.1);
+    }
+
+    .badge {
+      background: linear-gradient(135deg, #dcfce7, #f0fdf4);
+      border: 1px solid #bbf7d0;
+    }
+
+    @media (max-width: 900px) {
+      .auth-shell,
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .auth-card,
+      .sidebar {
+        position: static;
+      }
+
+      .tutorial-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .app-topbar,
+      .panel-header {
+        display: grid;
+      }
+
+      .row,
+      .searchbar {
+        grid-template-columns: 1fr;
+      }
+
+    }
+
+    @media (max-width: 520px) {
+      .screen {
+        width: min(100% - 20px, 1180px);
+        padding-top: 14px;
+      }
+
+      .hero,
+      .auth-card,
+      .content {
+        padding: 16px;
+      }
+
+      .actions,
+      .top-actions {
+        justify-content: stretch;
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="screen" id="authScreen">
+    <section class="auth-shell">
+      <div class="hero">
+        <div>
+          <div class="brand">
+            <div class="logo" aria-hidden="true">B</div>
+            <div>
+              <h1>Biblioteca de Informacoes</h1>
+              <p class="muted">Um painel simples para criar acessos locais, conectar varias planilhas e consultar tudo pelo navegador.</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2>Como comecar</h2>
+          <div class="tutorial-grid">
+            <article class="step">
+              <span class="step-number">1</span>
+              <h3>Crie seu acesso</h3>
+              <p class="muted">Informe nome, usuario e senha. Esse acesso fica salvo apenas neste navegador.</p>
+            </article>
+            <article class="step">
+              <span class="step-number">2</span>
+              <h3>Conecte uma planilha</h3>
+              <p class="muted">Cole a URL do App da Web do Google Apps Script. Cada URL pode representar uma biblioteca diferente.</p>
+            </article>
+            <article class="step">
+              <span class="step-number">3</span>
+              <h3>Guarde informacoes</h3>
+              <p class="muted">Salve titulo, categoria e conteudo. Cada registro vira uma linha na planilha selecionada.</p>
+            </article>
+            <article class="step">
+              <span class="step-number">4</span>
+              <h3>Pesquise quando precisar</h3>
+              <p class="muted">Escolha uma planilha, busque por texto ou filtre por categoria para encontrar rapidamente.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+
+      <aside class="auth-card">
+        <div class="segmented">
+          <button class="segment active" type="button" data-auth-tab="login">Entrar</button>
+          <button class="segment" type="button" data-auth-tab="register">Criar acesso</button>
+        </div>
+
+        <form id="loginForm" class="form-grid">
+          <div>
+            <h2>Entrar</h2>
+            <p class="muted">Acesse suas planilhas cadastradas neste navegador.</p>
+          </div>
+          <div class="field">
+            <label for="loginUser">Usuario</label>
+            <input id="loginUser" autocomplete="username" required>
+          </div>
+          <div class="field">
+            <label for="loginPassword">Senha</label>
+            <input id="loginPassword" type="password" autocomplete="current-password" required>
+          </div>
+          <button class="button primary full" type="submit">Entrar</button>
+        </form>
+
+        <form id="registerForm" class="form-grid hidden">
+          <div>
+            <h2>Criar acesso</h2>
+            <p class="muted">Depois de criar, voce podera cadastrar uma ou varias planilhas.</p>
+          </div>
+          <div class="field">
+            <label for="displayName">Nome</label>
+            <input id="displayName" placeholder="Ex: Lucas" required>
+          </div>
+          <div class="field">
+            <label for="registerUser">Usuario</label>
+            <input id="registerUser" autocomplete="username" required>
+          </div>
+          <div class="field">
+            <label for="registerPassword">Senha</label>
+            <input id="registerPassword" type="password" autocomplete="new-password" minlength="4" required>
+          </div>
+          <button class="button primary full" type="submit">Criar e entrar</button>
+        </form>
+
+        <p class="small" style="margin-top: 14px;">Aviso: este login e local, salvo no navegador. Nao use senha importante.</p>
+      </aside>
+    </section>
+  </main>
+
+  <main class="screen hidden" id="appScreen">
+    <header class="app-topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">B</div>
+        <div>
+          <h1>Biblioteca</h1>
+          <p class="muted" id="welcomeText">Gerencie suas planilhas.</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="button secondary" type="button" id="openLibraryModal">Adicionar planilha</button>
+        <button class="button secondary" type="button" id="logoutButton">Sair</button>
+      </div>
+    </header>
+
+    <section class="workspace">
+      <aside class="sidebar">
+        <p class="nav-title">Opcoes</p>
+        <nav class="tab-list">
+          <button class="tab-button active" type="button" data-panel="savePanel">
+            <span class="tab-icon" aria-hidden="true">+</span>
+            <span>
+              <strong>Guardar</strong><br>
+              <span class="small">Enviar para a planilha</span>
+            </span>
+          </button>
+          <button class="tab-button" type="button" data-panel="searchPanel">
+            <span class="tab-icon" aria-hidden="true">?</span>
+            <span>
+              <strong>Pegar</strong><br>
+              <span class="small">Consultar informacoes</span>
+            </span>
+          </button>
+          <button class="tab-button" type="button" data-panel="librariesPanel">
+            <span class="tab-icon" aria-hidden="true">#</span>
+            <span>
+              <strong>Planilhas</strong><br>
+              <span class="small">Gerenciar conexoes</span>
+            </span>
+          </button>
+        </nav>
+      </aside>
+
+      <section class="content">
+        <div class="panel active" id="savePanel">
+          <div class="panel-header">
+            <div>
+              <h2>Guardar informacao</h2>
+              <p class="muted">O registro sera enviado para a planilha ativa.</p>
+            </div>
+          </div>
+
+          <form id="saveForm" class="form-grid form-surface">
+            <div class="row">
+              <div class="field">
+                <label for="title">Titulo</label>
+                <input id="title" name="titulo" placeholder="Digite um titulo claro para encontrar depois" required>
+              </div>
+              <div class="field">
+                <label for="category">Categoria</label>
+                <div class="category-picker">
+                  <div class="category-tools">
+                    <select id="category" name="categoria" class="hidden"></select>
+                    <div class="category-selected">
+                      <div class="category-selected-label">
+                        <span>Selecionada</span>
+                        <strong id="selectedCategoryName">Geral</strong>
+                      </div>
+                    </div>
+                    <button class="button secondary" type="button" id="showCategoryForm">Categorias</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label for="content">Descricao</label>
+              <textarea id="content" name="conteudo" placeholder="Descreva aqui a informacao que voce quer guardar..." required></textarea>
+            </div>
+            <div class="actions">
+              <button class="button secondary" type="reset">Limpar</button>
+              <button class="button primary" type="submit">Salvar informacao</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="panel" id="searchPanel">
+          <div class="panel-header">
+            <div>
+              <h2>Pegar informacoes</h2>
+              <p class="muted">Consulte os dados salvos na planilha ativa.</p>
+            </div>
+          </div>
+
+          <div class="searchbar">
+            <div class="field">
+              <label for="query">Buscar</label>
+              <input id="query" type="search" placeholder="Digite uma palavra-chave">
+            </div>
+            <div class="field">
+              <label for="filterCategory">Categoria</label>
+              <select id="filterCategory"></select>
+            </div>
+            <button class="button primary" id="searchButton" type="button">Pesquisar</button>
+          </div>
+
+          <div class="results" id="results">
+            <div class="empty">Clique em pesquisar para carregar as informacoes.</div>
+          </div>
+        </div>
+
+        <div class="panel" id="librariesPanel">
+          <div class="panel-header">
+            <div>
+              <h2>Planilhas cadastradas</h2>
+              <p class="muted">Voce pode ter varias bibliotecas, cada uma apontando para uma URL de App da Web.</p>
+            </div>
+            <button class="button primary" type="button" id="openLibraryModal2">Adicionar planilha</button>
+          </div>
+
+          <div class="library-list" id="libraryList"></div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <div class="modal hidden" id="libraryModal">
+    <form class="modal-card form-grid" id="libraryForm">
+      <div>
+        <h2>Adicionar planilha</h2>
+        <p class="muted">Cole a URL do App da Web. Ela deve terminar com /exec.</p>
+      </div>
+      <div class="field">
+        <label for="libraryName">Nome da biblioteca</label>
+        <input id="libraryName" placeholder="Ex: Biblioteca principal, SQL, Contatos" required>
+      </div>
+      <div class="field">
+        <label for="libraryUrl">URL do App da Web</label>
+        <input id="libraryUrl" placeholder="https://script.google.com/macros/s/.../exec" required>
+      </div>
+      <div class="actions">
+        <button class="button secondary" type="button" id="closeLibraryModal">Cancelar</button>
+        <button class="button primary" type="submit">Salvar planilha</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal hidden" id="categoryManager">
+    <div class="modal-card">
+      <div class="category-manager-head">
+        <div>
+          <h2>Gerenciar categorias</h2>
+          <p class="muted">Crie categorias para organizar os registros desta conta.</p>
+        </div>
+        <button class="button secondary" type="button" id="hideCategoryManager">Fechar</button>
+      </div>
+
+      <div class="new-category-box" id="newCategoryBox">
+        <div class="field">
+          <label for="newCategory">Nova categoria</label>
+          <input id="newCategory" placeholder="Ex: Financeiro, Estoque, Ramais">
+        </div>
+        <button class="button primary" type="button" id="addCategoryButton">Adicionar</button>
+        <button class="button secondary" type="button" id="cancelCategoryButton">Limpar</button>
+      </div>
+
+      <div class="category-list" id="categoryChips"></div>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="confirmModal">
+    <div class="modal-card confirm-card">
+      <div class="confirm-icon" aria-hidden="true">!</div>
+      <h2>Excluir informacao?</h2>
+      <p class="muted">Essa acao remove o registro da planilha ativa e nao pode ser desfeita pelo site.</p>
+      <div class="actions">
+        <button class="button secondary" type="button" id="cancelDeleteButton">Cancelar</button>
+        <button class="button danger" type="button" id="confirmDeleteButton">Excluir</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const STORAGE_KEY = "biblioteca_app_v2";
+    const DEFAULT_CATEGORIES = ["Geral", "SQL", "Sistema", "Contato", "Processo", "Outro"];
+
+    const authScreen = document.querySelector("#authScreen");
+    const appScreen = document.querySelector("#appScreen");
+    const loginForm = document.querySelector("#loginForm");
+    const registerForm = document.querySelector("#registerForm");
+    const authTabs = document.querySelectorAll("[data-auth-tab]");
+    const welcomeText = document.querySelector("#welcomeText");
+    const logoutButton = document.querySelector("#logoutButton");
+    const tabs = document.querySelectorAll(".tab-button");
+    const panels = document.querySelectorAll(".panel");
+    const librarySelect = document.querySelector("#librarySelect");
+    const libraryList = document.querySelector("#libraryList");
+    const libraryModal = document.querySelector("#libraryModal");
+    const libraryForm = document.querySelector("#libraryForm");
+    const confirmModal = document.querySelector("#confirmModal");
+    const cancelDeleteButton = document.querySelector("#cancelDeleteButton");
+    const confirmDeleteButton = document.querySelector("#confirmDeleteButton");
+    const saveForm = document.querySelector("#saveForm");
+    const categorySelect = document.querySelector("#category");
+    const selectedCategoryName = document.querySelector("#selectedCategoryName");
+    const categoryChips = document.querySelector("#categoryChips");
+    const categoryManager = document.querySelector("#categoryManager");
+    const newCategoryBox = document.querySelector("#newCategoryBox");
+    const newCategoryInput = document.querySelector("#newCategory");
+    const showCategoryFormButton = document.querySelector("#showCategoryForm");
+    const hideCategoryManagerButton = document.querySelector("#hideCategoryManager");
+    const openNewCategoryBoxButton = document.querySelector("#openNewCategoryBox");
+    const addCategoryButton = document.querySelector("#addCategoryButton");
+    const cancelCategoryButton = document.querySelector("#cancelCategoryButton");
+    const results = document.querySelector("#results");
+    const queryInput = document.querySelector("#query");
+    const filterCategory = document.querySelector("#filterCategory");
+    const searchButton = document.querySelector("#searchButton");
+    const toast = document.querySelector("#toast");
+
+    let state = loadState();
+    let pendingDeleteButton = null;
+
+    initialize();
+
+    function initialize() {
+      authTabs.forEach((tab) => {
+        tab.addEventListener("click", () => setAuthTab(tab.dataset.authTab));
+      });
+
+      loginForm.addEventListener("submit", handleLogin);
+      registerForm.addEventListener("submit", handleRegister);
+      logoutButton.addEventListener("click", logout);
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => setPanel(tab.dataset.panel));
+      });
+
+      document.querySelector("#openLibraryModal").addEventListener("click", openLibraryModal);
+      document.querySelector("#openLibraryModal2").addEventListener("click", openLibraryModal);
+      document.querySelector("#closeLibraryModal").addEventListener("click", closeLibraryModal);
+      libraryModal.addEventListener("click", (event) => {
+        if (event.target === libraryModal) closeLibraryModal();
+      });
+      libraryForm.addEventListener("submit", handleLibrarySubmit);
+      cancelDeleteButton.addEventListener("click", closeConfirmModal);
+      confirmDeleteButton.addEventListener("click", confirmDeleteItem);
+      confirmModal.addEventListener("click", (event) => {
+        if (event.target === confirmModal) closeConfirmModal();
+      });
+      if (librarySelect) {
+        librarySelect.addEventListener("change", () => {
+          const user = getCurrentUser();
+          user.activeLibraryId = librarySelect.value;
+          saveState();
+          renderApp();
+        });
+      }
+
+      showCategoryFormButton.addEventListener("click", openCategoryManager);
+      hideCategoryManagerButton.addEventListener("click", closeCategoryManager);
+      addCategoryButton.addEventListener("click", addCategory);
+      cancelCategoryButton.addEventListener("click", closeCategoryForm);
+      categoryManager.addEventListener("click", (event) => {
+        if (event.target === categoryManager) closeCategoryManager();
+      });
+      categorySelect.addEventListener("change", () => {
+        const user = getCurrentUser();
+        selectedCategoryName.textContent = categorySelect.value || "Geral";
+        if (user) renderCategoryChips(user);
+      });
+      newCategoryInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          addCategory();
+        }
+      });
+      saveForm.addEventListener("submit", handleSave);
+      searchButton.addEventListener("click", searchItems);
+      queryInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") searchItems();
+      });
+
+      if (state.currentUser) {
+        showApp();
+      } else {
+        showAuth();
+      }
+    }
+
+    function handleRegister(event) {
+      event.preventDefault();
+      const name = document.querySelector("#displayName").value.trim();
+      const username = document.querySelector("#registerUser").value.trim();
+      const password = document.querySelector("#registerPassword").value;
+
+      if (state.users.some((user) => user.username.toLowerCase() === username.toLowerCase())) {
+        showToast("Esse usuario ja existe neste navegador.");
+        return;
+      }
+
+      const user = {
+        id: createId(),
+        name,
+        username,
+        password,
+        categories: [...DEFAULT_CATEGORIES],
+        activeLibraryId: "",
+        libraries: []
+      };
+
+      state.users.push(user);
+      state.currentUser = user.id;
+      saveState();
+      showApp();
+      showToast("Acesso criado. Adicione sua primeira planilha.");
+    }
+
+    function handleLogin(event) {
+      event.preventDefault();
+      const username = document.querySelector("#loginUser").value.trim();
+      const password = document.querySelector("#loginPassword").value;
+      const user = state.users.find((item) => item.username === username && item.password === password);
+
+      if (!user) {
+        showToast("Usuario ou senha incorretos.");
+        return;
+      }
+
+      state.currentUser = user.id;
+      saveState();
+      showApp();
+    }
+
+    function logout() {
+      state.currentUser = null;
+      saveState();
+      loginForm.reset();
+      showAuth();
+    }
+
+    function showAuth() {
+      authScreen.classList.remove("hidden");
+      appScreen.classList.add("hidden");
+      setAuthTab(state.users.length ? "login" : "register");
+    }
+
+    function showApp() {
+      authScreen.classList.add("hidden");
+      appScreen.classList.remove("hidden");
+      renderApp();
+    }
+
+    function setAuthTab(tabName) {
+      authTabs.forEach((tab) => tab.classList.toggle("active", tab.dataset.authTab === tabName));
+      loginForm.classList.toggle("hidden", tabName !== "login");
+      registerForm.classList.toggle("hidden", tabName !== "register");
+    }
+
+    function setPanel(panelId) {
+      tabs.forEach((tab) => tab.classList.toggle("active", tab.dataset.panel === panelId));
+      panels.forEach((panel) => panel.classList.toggle("active", panel.id === panelId));
+    }
+
+    function renderApp() {
+      const user = getCurrentUser();
+      if (!user) return;
+
+      if (!user.libraries.length) {
+        user.activeLibraryId = "";
+      }
+
+      welcomeText.textContent = `Ola, ${user.name}. Escolha uma planilha para guardar ou consultar informacoes.`;
+      ensureUserCategories(user);
+      renderLibrarySelect(user);
+      renderLibraries(user);
+      renderCategorySelects(user);
+    }
+
+    function renderLibrarySelect(user) {
+      if (!librarySelect) return;
+
+      librarySelect.innerHTML = user.libraries.map((library) => (
+        `<option value="${library.id}">${escapeHtml(library.name)}</option>`
+      )).join("");
+
+      if (user.activeLibraryId) {
+        librarySelect.value = user.activeLibraryId;
+      }
+
+    }
+
+    function renderLibraries(user) {
+      if (!user.libraries.length) {
+        libraryList.innerHTML = '<div class="empty">Nenhuma planilha cadastrada. Adicione uma URL de App da Web para comecar.</div>';
+        return;
+      }
+
+      libraryList.innerHTML = user.libraries.map((library) => {
+        const active = library.id === user.activeLibraryId ? " active" : "";
+        return `
+          <article class="library-card${active}">
+            <div class="library-head">
+              <div>
+                <h3>${escapeHtml(library.name)}</h3>
+                <p class="small">${library.id === user.activeLibraryId ? "Planilha ativa" : "Disponivel"}</p>
+              </div>
+              <div class="category-row-actions">
+                <button class="button secondary" type="button" data-use-library="${library.id}">Usar</button>
+                <button class="button danger" type="button" data-remove-library="${library.id}">Remover</button>
+              </div>
+            </div>
+            <p class="library-url">${escapeHtml(library.url)}</p>
+          </article>
+        `;
+      }).join("");
+
+      document.querySelectorAll("[data-use-library]").forEach((button) => {
+        button.addEventListener("click", () => useLibrary(button.dataset.useLibrary));
+      });
+
+      document.querySelectorAll("[data-remove-library]").forEach((button) => {
+        button.addEventListener("click", () => removeLibrary(button.dataset.removeLibrary));
+      });
+    }
+
+    function useLibrary(id) {
+      const user = getCurrentUser();
+      user.activeLibraryId = id;
+      saveState();
+      renderApp();
+      showToast("Planilha selecionada.");
+    }
+
+    function openLibraryModal() {
+      libraryForm.reset();
+      libraryModal.classList.remove("hidden");
+      document.querySelector("#libraryName").focus();
+    }
+
+    function closeLibraryModal() {
+      libraryModal.classList.add("hidden");
+    }
+
+    function handleLibrarySubmit(event) {
+      event.preventDefault();
+      const user = getCurrentUser();
+      const name = document.querySelector("#libraryName").value.trim();
+      const url = document.querySelector("#libraryUrl").value.trim();
+
+      if (!url.startsWith("https://script.google.com/") || !url.endsWith("/exec")) {
+        showToast("Use a URL do App da Web. Ela precisa comecar com https://script.google.com/ e terminar com /exec.");
+        return;
+      }
+
+      const library = {
+        id: createId(),
+        name,
+        url
+      };
+
+      user.libraries.push(library);
+      user.activeLibraryId = library.id;
+      saveState();
+      closeLibraryModal();
+      renderApp();
+      showToast("Planilha adicionada.");
+    }
+
+    function removeLibrary(id) {
+      const user = getCurrentUser();
+      user.libraries = user.libraries.filter((library) => library.id !== id);
+
+      if (user.activeLibraryId === id) {
+        user.activeLibraryId = user.libraries[0]?.id || "";
+      }
+
+      saveState();
+      renderApp();
+    }
+
+    function renderCategorySelects(user) {
+      ensureUserCategories(user);
+
+      const currentValue = categorySelect.value || user.categories[0] || "Geral";
+      categorySelect.innerHTML = user.categories.map((category) => (
+        `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`
+      )).join("");
+
+      if (user.categories.includes(currentValue)) {
+        categorySelect.value = currentValue;
+      }
+
+      selectedCategoryName.textContent = categorySelect.value || "Geral";
+
+      filterCategory.innerHTML = '<option value="">Todas</option>' + user.categories.map((category) => (
+        `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`
+      )).join("");
+
+      renderCategoryChips(user);
+    }
+
+    function renderCategoryChips(user) {
+      const activeCategory = categorySelect.value || user.categories[0] || "Geral";
+
+      categoryChips.innerHTML = user.categories.map((category) => {
+        const active = category === activeCategory ? " active" : "";
+        return `
+          <div class="category-row${active}">
+            <span class="category-name">${escapeHtml(category)}</span>
+            <div class="category-row-actions">
+              <button class="category-mini-button" type="button" data-select-category="${escapeHtml(category)}">Usar</button>
+              <button class="category-mini-button remove" type="button" data-remove-category="${escapeHtml(category)}">Excluir</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      document.querySelectorAll("[data-select-category]").forEach((button) => {
+        button.addEventListener("click", () => {
+          categorySelect.value = button.dataset.selectCategory;
+          selectedCategoryName.textContent = categorySelect.value;
+          renderCategoryChips(user);
+          closeCategoryManager();
+        });
+      });
+
+      document.querySelectorAll("[data-remove-category]").forEach((button) => {
+        button.addEventListener("click", (event) => {
+          event.stopPropagation();
+          removeCategory(button.dataset.removeCategory);
+        });
+      });
+    }
+
+    function openCategoryForm() {
+      newCategoryBox.classList.remove("hidden");
+      newCategoryInput.focus();
+    }
+
+    function closeCategoryForm() {
+      newCategoryInput.value = "";
+    }
+
+    function openCategoryManager() {
+      categoryManager.classList.remove("hidden");
+      renderCategoryChips(getCurrentUser());
+      newCategoryInput.focus();
+    }
+
+    function closeCategoryManager() {
+      categoryManager.classList.add("hidden");
+      closeCategoryForm();
+    }
+
+    function addCategory() {
+      const user = getCurrentUser();
+      const category = newCategoryInput.value.trim();
+
+      if (!category) {
+        showToast("Digite o nome da categoria.");
+        return;
+      }
+
+      ensureUserCategories(user);
+
+      const exists = user.categories.some((item) => item.toLowerCase() === category.toLowerCase());
+      if (exists) {
+        showToast("Essa categoria ja existe.");
+        categorySelect.value = user.categories.find((item) => item.toLowerCase() === category.toLowerCase());
+        closeCategoryForm();
+        return;
+      }
+
+      user.categories.push(category);
+      saveState();
+      renderCategorySelects(user);
+      categorySelect.value = category;
+      selectedCategoryName.textContent = category;
+      renderCategoryChips(user);
+      filterCategory.value = "";
+      closeCategoryForm();
+      showToast("Categoria adicionada.");
+    }
+
+    function removeCategory(category) {
+      const user = getCurrentUser();
+
+      if (user.categories.length <= 1) {
+        showToast("Mantenha pelo menos uma categoria.");
+        return;
+      }
+
+      user.categories = user.categories.filter((item) => item !== category);
+
+      if (categorySelect.value === category) {
+        categorySelect.value = user.categories[0] || "Geral";
+      }
+
+      saveState();
+      renderCategorySelects(user);
+      selectedCategoryName.textContent = categorySelect.value || "Geral";
+      showToast("Categoria excluida.");
+    }
+
+    async function handleSave(event) {
+      event.preventDefault();
+      const library = getActiveLibrary();
+
+      if (!library) {
+        showToast("Adicione uma planilha antes de salvar.");
+        return;
+      }
+
+      const formData = new FormData(saveForm);
+      const params = {
+        action: "save",
+        titulo: formData.get("titulo").trim(),
+        categoria: formData.get("categoria"),
+        conteudo: formData.get("conteudo").trim()
+      };
+
+      try {
+        const response = await loadJsonp(library.url, params);
+
+        if (!response.ok) {
+          throw new Error(response.message || "Erro ao salvar");
+        }
+
+        saveForm.reset();
+        showToast("Informacao salva na planilha ativa.");
+      } catch (error) {
+        showToast("Nao foi possivel salvar. Confira a URL da planilha.");
+      }
+    }
+
+    function searchItems() {
+      const library = getActiveLibrary();
+
+      if (!library) {
+        results.innerHTML = '<div class="empty">Adicione uma planilha antes de pesquisar.</div>';
+        return;
+      }
+
+      results.innerHTML = '<div class="empty">Carregando informacoes...</div>';
+      loadJsonp(library.url, {
+        q: queryInput.value.trim(),
+        categoria: filterCategory.value
+      })
+        .then((payload) => renderResults(payload.items || []))
+        .catch(() => {
+          results.innerHTML = '<div class="empty">Nao foi possivel consultar esta planilha.</div>';
+        });
+    }
+
+    function renderResults(items) {
+      if (!items.length) {
+        results.innerHTML = '<div class="empty">Nenhuma informacao encontrada.</div>';
+        return;
+      }
+
+      results.innerHTML = items.map((item) => `
+        <article class="item">
+          <div class="item-head">
+            <h3>${escapeHtml(item.titulo || "Sem titulo")}</h3>
+            <div class="item-actions">
+              <span class="badge">${escapeHtml(item.categoria || "Geral")}</span>
+              <button
+                class="icon-button"
+                type="button"
+                data-delete-row="${escapeHtml(item.row || "")}"
+                data-delete-title="${escapeHtml(item.titulo || "")}"
+                data-delete-category="${escapeHtml(item.categoria || "Geral")}"
+                data-delete-content="${escapeHtml(item.conteudo || "")}"
+              >Excluir</button>
+            </div>
+          </div>
+          <p class="item-meta">${escapeHtml(formatDate(item.data))}</p>
+          <p class="item-text">${escapeHtml(item.conteudo || "")}</p>
+        </article>
+      `).join("");
+
+      document.querySelectorAll("[data-delete-row]").forEach((button) => {
+        button.addEventListener("click", () => deleteItem(button));
+      });
+    }
+
+    async function deleteItem(button) {
+      const library = getActiveLibrary();
+
+      if (!library) {
+        showToast("Nao foi possivel identificar a informacao.");
+        return;
+      }
+
+      pendingDeleteButton = button;
+      confirmModal.classList.remove("hidden");
+    }
+
+    function closeConfirmModal() {
+      pendingDeleteButton = null;
+      confirmModal.classList.add("hidden");
+    }
+
+    async function confirmDeleteItem() {
+      const library = getActiveLibrary();
+      const button = pendingDeleteButton;
+
+      if (!library || !button) {
+        closeConfirmModal();
+        showToast("Nao foi possivel identificar a informacao.");
+        return;
+      }
+
+      const row = button.dataset.deleteRow;
+      confirmDeleteButton.disabled = true;
+      confirmDeleteButton.textContent = "Excluindo...";
+
+      try {
+        const response = await loadJsonp(library.url, {
+          action: "delete",
+          row,
+          titulo: button.dataset.deleteTitle,
+          categoria: button.dataset.deleteCategory,
+          conteudo: button.dataset.deleteContent
+        });
+
+        if (!response.ok) {
+          throw new Error(response.message || "Erro ao excluir");
+        }
+
+        closeConfirmModal();
+        showToast("Informacao excluida.");
+        searchItems();
+      } catch (error) {
+        showToast("Nao foi possivel excluir. Atualize o Apps Script e reimplante.");
+      } finally {
+        confirmDeleteButton.disabled = false;
+        confirmDeleteButton.textContent = "Excluir";
+      }
+    }
+
+    function loadJsonp(baseUrl, params) {
+      return new Promise((resolve, reject) => {
+        const callbackName = `bibliotecaCallback_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+        const url = buildUrl(baseUrl, params);
+        url.searchParams.set("callback", callbackName);
+
+        const script = document.createElement("script");
+        const timeout = setTimeout(() => {
+          cleanup();
+          reject(new Error("Tempo esgotado"));
+        }, 12000);
+
+        window[callbackName] = (data) => {
+          cleanup();
+          resolve(data);
+        };
+
+        script.onerror = () => {
+          cleanup();
+          reject(new Error("Erro ao carregar"));
+        };
+
+        function cleanup() {
+          clearTimeout(timeout);
+          script.remove();
+          delete window[callbackName];
+        }
+
+        script.src = url.toString();
+        document.body.appendChild(script);
+      });
+    }
+
+    function buildUrl(baseUrl, params) {
+      const url = new URL(baseUrl);
+      Object.entries(params).forEach(([key, value]) => url.searchParams.set(key, value));
+      return url;
+    }
+
+    function getCurrentUser() {
+      return state.users.find((user) => user.id === state.currentUser);
+    }
+
+    function getActiveLibrary() {
+      const user = getCurrentUser();
+      return user?.libraries.find((library) => library.id === user.activeLibraryId) || null;
+    }
+
+    function ensureUserCategories(user) {
+      if (!user.categories || !Array.isArray(user.categories) || !user.categories.length) {
+        user.categories = [...DEFAULT_CATEGORIES];
+        saveState();
+      }
+    }
+
+    function loadState() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (saved && Array.isArray(saved.users)) return saved;
+      } catch (error) {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+
+      return {
+        currentUser: null,
+        users: []
+      };
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function createId() {
+      return `id_${Date.now()}_${Math.floor(Math.random() * 100000)}`;
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3200);
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value;
+      return date.toLocaleString("pt-BR");
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+  </script>
+</body>
+</html>
