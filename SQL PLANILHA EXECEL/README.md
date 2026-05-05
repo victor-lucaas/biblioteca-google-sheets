@@ -119,15 +119,3 @@ As categorias aparecem na janela **Gerenciar categorias** e podem ser selecionad
 6. Clique em **Adicionar planilha**.
 7. Informe um nome e cole a URL.
 8. A nova planilha passa a aparecer na lista de bibliotecas.
-
-## Publicacao no GitHub Pages
-
-Para publicar:
-
-1. Envie este projeto para um repositorio no GitHub.
-2. No GitHub, abra **Settings > Pages**.
-3. Em **Build and deployment**, escolha publicar pela branch principal.
-4. Selecione a pasta raiz do repositorio.
-5. Salve.
-
-O GitHub Pages vai usar o `index.html` como pagina inicial.
