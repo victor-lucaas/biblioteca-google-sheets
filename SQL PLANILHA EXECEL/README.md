@@ -101,9 +101,6 @@ Cada usuario pode usar as categorias padrao ou criar novas categorias pela tela 
 
 Categorias padrao:
 
-```text
-Geral | SQL | Sistema | Contato | Processo | Outro
-```
 
 Ao clicar em **Nova**, o usuario informa o nome da categoria. Ela passa a aparecer no campo de categoria e tambem no filtro da tela **Pegar**.
 
